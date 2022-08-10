@@ -1,0 +1,14 @@
+{
+  "name": "tableau-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/dist/index.js",
+  "module": "index.ts",
+  "types": "/dist/types/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Spraus Lau",
+  "license": "ISC"
+}
