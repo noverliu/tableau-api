@@ -1,5 +1,13 @@
 import { tableauSoftware } from './tableau-2.9.1.js';
 
+const TableauPromise: TableauPromise = tableauSoftware.Promise;
+
+interface TableauPromise<T> extends Promise<T> {
+	then: (callback: Function, errback: Function) => TableauPromise;
+	always: (callback: Function) => TableauPromise;
+	otherwise: (errback: Function) => TableauPromise;
+}
+
 export declare enum ErrorCode {
 	BROWSER_NOT_CAPABLE = "browserNotCapable",
 	DOWNLOAD_WORKBOOK_NOT_ALLOWED = "downloadWorkbookNotAllowed",
@@ -65,6 +73,57 @@ export declare enum TableauEventName {
 	VIZ_RESIZE = 'vizresize'
 }
 
+export enum FieldAggregationType {
+	ATTR = 'ATTR',
+	AVG = 'AVG',
+	COLLECT = 'COLLECT',
+	COUNT = 'COUNT',
+	COUNTD = 'COUNTD',
+	DAY = 'DAY',
+	END = 'END',
+	HOUR = 'HOUR',
+	INOUT = 'INOUT',
+	KURTOSIS = 'KURTOSIS',
+	MAX = 'MAX',
+	MDY = 'MDY',
+	MEDIAN = 'MEDIAN',
+	MIN = 'MIN',
+	MINUTE = 'MINUTE',
+	MONTH = 'MONTH',
+	MONTHYEAR = 'MONTHYEAR',
+	NONE = 'NONE',
+	PERCENTILE = 'PERCENTILE',
+	QTR = 'QTR',
+	QUART1 = 'QUART1',
+	QUART3 = 'QUART3',
+	SECOND = 'SECOND',
+	SKEWNESS = 'SKEWNESS',
+	STDEV = 'STDEV',
+	STDEVP = 'STDEVP',
+	SUM = 'SUM',
+	SUM_XSQR = 'SUM_XSQR',
+	TRUNC_DAY = 'TRUNC_DAY',
+	TRUNC_HOUR = 'TRUNC_HOUR',
+	TRUNC_MINUTE = 'TRUNC_MINUTE',
+	TRUNC_MONTH = 'TRUNC_MONTH',
+	TRUNC_QTR = 'TRUNC_QTR',
+	TRUNC_SECOND = 'TRUNC_SECOND',
+	TRUNC_WEEK = 'TRUNC_WEEK',
+	TRUNC_YEAR = 'TRUNC_YEAR',
+	USER = 'USER',
+	VAR = 'VAR',
+	VARP = 'VARP',
+	WEEK = 'WEEK',
+	WEEKDAY = 'WEEKDAY',
+	YEAR = 'YEAR',
+}
+
+export enum FieldRoleType {
+	DIMENSION = 'dimension',
+	MEASURE = 'measure',
+	UNKNOWN = 'unknown'
+}
+
 export interface TableauException {
 	tableauSoftwareErrorCode: ErrorCode;
 	message: string;
@@ -108,13 +167,142 @@ export interface TableauEvent {
 	getEventName: () => TableauEventName;
 }
 
+export interface CustomMarkContextMenu extends TableauEvent {
+	getContextMenuId: () => string;
+}
+
+export interface CustomViewEvent extends TableauEvent {
+	getCustomViewAsync: ()=>TableauPromise<CustomView>
+}
+
+interface TableauEventWithWorksheet extends TableauEvent {
+	getWorksheet: () => Worksheet;
+}
+
+export interface FilterEvent extends TableauEventWithWorksheet {	
+	getFieldName: () => string;
+	getFilterAsync: () => TableauPromise<Filter>;
+}
+
+export interface MarksEvent extends TableauEventWithWorksheet {
+	getMarksAsync: () => TableauPromise<Mark[]>;
+}
+
+export interface ParameterEvent extends TableauEvent {
+	getParameterName: () => string;
+	getParameterAsync: () => TableauPromise<Parameter>;
+}
+
+export interface StoryPointSwitchEvent extends TableauEvent {
+	getOldStoryPointInfo: () => StoryPointInfo;
+	getNewStoryPoint: () => StoryPoint;
+}
+
+export interface TabSwitchEvent extends TableauEvent {
+	getOldSheetName: () => string;
+	getNewSheetName: () => string;
+}
+
+export interface ToolbarStateEvent extends TableauEvent {
+	getToolbarState: () => ToolbarState;
+}
+
+export interface UrlActionEvent {
+	getURL: () => string;
+	getTarget: () => string;
+}
+
+export interface VizResizeEvent extends TableauEvent {
+	GetAvailableSize: () => {}
+}
 
 export interface Workbook {
+	getViz: () => Viz;
+	getActiveSheet: () => Sheet;
+	getActiveCustomView: () => CustomView;
+	getPublishedSheetsInfo: () => SheetInfo[];
+	getName: () => string;
+	activateSheetAsync: (sheetNameOrIndex: string | number) => TableauPromise<Sheet>;
+	revertAllAsync: () => TableauPromise;
+	getParametersAsync: () => TableauPromise<Parameter[]>;
+	changeParameterValueAsync: (name: string, value: any) => TableauPromise<Parameter>;
+	getCustomViewsAsync: () => TableauPromise<CustomView[]>;
+	showCustomViewAsync: (customViewNmae: string) => TableauPromise<CustomView>;
+	removeCustomViewAsync: (customViewName: string) => TableauPromise<CustomView>;
+	rememberCustomViewAsync: (customViewName: string) => TableauPromise<CustomView>;
+	setActiveCustomViewAsDefaultAsync: () => void;
+}
+
+export interface DataSource {
+	getName: () => string;
+	getIsPrimary: () => boolean;
+	getFields: () => Field[];
+}
+
+export interface Field {
+	getName: () => string;
+	getAggregation: () => FieldAggregationType;
+	getDataSource: () => DataSource;
+	getRole: () => FieldRoleType;
+}
+
+export interface CustomView {
+	getName: () => string;
+	setName: (name: string) => void;
+	getAdvertised: () => boolean;
+	setAdvertised: (advertised: boolean) => void;
+	getDefault: () => boolean;
+	getOwnerName: () => string;
+	getUrl: () => string;
+	getWorkbook: () => Workbook;
+	saveAsync: () => TableauPromise<CustomView>;
+}
+
+export interface Sheet {
 
 }
 
-export interface VizResizeEvent {
+export interface SheetInfo {
 
+}
+
+export interface Worksheet {
+
+}
+
+export interface StoryPoint {
+
+}
+
+export interface StoryPointInfo {
+
+}
+
+export interface CustomView {
+
+}
+
+
+export interface Filter {
+
+}
+
+export interface Mark {
+
+}
+
+export interface Parameter {
+
+}
+
+export type Size = {
+	width: number
+	height: number
+}
+
+export type Point = {
+	x: number
+	y: number
 }
 
 export const Viz: new (parentElement: HTMLElement, url: string, options: VizCreateOptions) => Viz = tableauSoftware.Viz;
