@@ -1,13 +1,5 @@
 import { tableauSoftware } from './tableau-2.9.1.js';
 
-const TableauPromise: TableauPromise = tableauSoftware.Promise;
-
-interface TableauPromise<T> extends Promise<T> {
-	then: (callback: Function, errback: Function) => TableauPromise;
-	always: (callback: Function) => TableauPromise;
-	otherwise: (errback: Function) => TableauPromise;
-}
-
 export declare enum ErrorCode {
 	BROWSER_NOT_CAPABLE = "browserNotCapable",
 	DOWNLOAD_WORKBOOK_NOT_ALLOWED = "downloadWorkbookNotAllowed",
@@ -124,6 +116,103 @@ export enum FieldRoleType {
 	UNKNOWN = 'unknown'
 }
 
+export enum SheetType {
+	DASHBOARD = 'dashboard',
+	STORY = 'story',
+	WORKSHEET = 'worksheet',
+}
+
+export enum SheetSizeBehavior {
+	ATLEAST = 'atleast',
+	ATMOST = 'atmost',
+	AUTOMATIC = 'automatic',
+	EXACTLY = 'exactly',
+	RANGE = 'range',
+}
+
+export enum ApiMenuType {
+	Ubertip = 'ubertip'
+}
+
+export enum DashboardObjectType {
+	ADDIN = 'addIn',
+	BLANK = 'blank',
+	IMAGE = 'image',
+	LEGEND = 'legend',
+	PAGE_FILTER = 'pageFilter',
+	PARAMETER_CONTROL = 'parameterControl',
+	QUICK_FILTER = 'quickFilter',
+	TEXT = 'text',
+	TITLE = 'title',
+	WEB_PAGE = 'webPage',
+	WORKSHEET = 'worksheet',
+}
+
+export enum ParameterDataType {
+	BOOLEAN = 'boolean',
+	DATE = 'date',
+	DATETIME = 'datetime',
+	FLOAT = 'float',
+	INTEGER = 'integer',
+	STRING = 'string',
+}
+
+export enum ParameterAllowableValuesType {
+	ALL = 'all',
+	LIST = 'list',
+	RANGE = 'range',
+}
+
+export enum PeriodType {
+	DAY = 'day',
+	HOUR = 'hour',
+	MINUTE = 'minute',
+	MONTH = 'month',
+	QUARTER = 'quarter',
+	SECOND = 'second',
+	WEEK = 'week',
+	YEAR = 'year',
+}
+
+export enum FilterUpdateType {
+	ADD='add',
+	ALL='all',
+	REMOVE='remove',
+	REPLACE='replace',
+}
+
+export enum NullOption {
+	ALL_VALUES='allValues',
+	NON_NULL_VALUES='nonNullValues',
+	NULL_VALUES='nullValues',
+}
+
+export enum DateRangeType {
+	CURR='curr',
+	LAST='last',
+	LASTN='lastn',
+	NEXT='next',
+	NEXTN='nextn',
+	TODATE='todate',
+}
+
+export enum FilterType {
+	CATEGORICAL='categorical',
+	HIERARCHICAL='hierarchical',
+	QUANTITATIVE='quantitative',
+	RELATIVEDATE='relativedate',
+}
+
+export enum SelectionUpdateType {
+	ADD='add',
+	REMOVE='remove',
+	REPLACE='replace',
+}
+
+interface TableauBaseWithName {
+	getName: () => string;
+}
+
 export interface TableauException {
 	tableauSoftwareErrorCode: ErrorCode;
 	message: string;
@@ -172,7 +261,7 @@ export interface CustomMarkContextMenu extends TableauEvent {
 }
 
 export interface CustomViewEvent extends TableauEvent {
-	getCustomViewAsync: ()=>TableauPromise<CustomView>
+	getCustomViewAsync: ()=>Promise<CustomView>
 }
 
 interface TableauEventWithWorksheet extends TableauEvent {
@@ -181,16 +270,16 @@ interface TableauEventWithWorksheet extends TableauEvent {
 
 export interface FilterEvent extends TableauEventWithWorksheet {	
 	getFieldName: () => string;
-	getFilterAsync: () => TableauPromise<Filter>;
+	getFilterAsync: () => Promise<Filter>;
 }
 
 export interface MarksEvent extends TableauEventWithWorksheet {
-	getMarksAsync: () => TableauPromise<Mark[]>;
+	getMarksAsync: () => Promise<Mark[]>;
 }
 
 export interface ParameterEvent extends TableauEvent {
 	getParameterName: () => string;
-	getParameterAsync: () => TableauPromise<Parameter>;
+	getParameterAsync: () => Promise<Parameter>;
 }
 
 export interface StoryPointSwitchEvent extends TableauEvent {
@@ -216,38 +305,34 @@ export interface VizResizeEvent extends TableauEvent {
 	GetAvailableSize: () => {}
 }
 
-export interface Workbook {
+export interface Workbook extends TableauBaseWithName {
 	getViz: () => Viz;
 	getActiveSheet: () => Sheet;
 	getActiveCustomView: () => CustomView;
 	getPublishedSheetsInfo: () => SheetInfo[];
-	getName: () => string;
-	activateSheetAsync: (sheetNameOrIndex: string | number) => TableauPromise<Sheet>;
-	revertAllAsync: () => TableauPromise;
-	getParametersAsync: () => TableauPromise<Parameter[]>;
-	changeParameterValueAsync: (name: string, value: any) => TableauPromise<Parameter>;
-	getCustomViewsAsync: () => TableauPromise<CustomView[]>;
-	showCustomViewAsync: (customViewNmae: string) => TableauPromise<CustomView>;
-	removeCustomViewAsync: (customViewName: string) => TableauPromise<CustomView>;
-	rememberCustomViewAsync: (customViewName: string) => TableauPromise<CustomView>;
+	activateSheetAsync: (sheetNameOrIndex: string | number) => Promise<Sheet>;
+	revertAllAsync: () => Promise<void>;
+	getParametersAsync: () => Promise<Parameter[]>;
+	changeParameterValueAsync: (name: string, value: any) => Promise<Parameter>;
+	getCustomViewsAsync: () => Promise<CustomView[]>;
+	showCustomViewAsync: (customViewNmae: string) => Promise<CustomView>;
+	removeCustomViewAsync: (customViewName: string) => Promise<CustomView>;
+	rememberCustomViewAsync: (customViewName: string) => Promise<CustomView>;
 	setActiveCustomViewAsDefaultAsync: () => void;
 }
 
-export interface DataSource {
-	getName: () => string;
+export interface DataSource extends TableauBaseWithName {
 	getIsPrimary: () => boolean;
 	getFields: () => Field[];
 }
 
-export interface Field {
-	getName: () => string;
+export interface Field extends TableauBaseWithName {
 	getAggregation: () => FieldAggregationType;
 	getDataSource: () => DataSource;
 	getRole: () => FieldRoleType;
 }
 
-export interface CustomView {
-	getName: () => string;
+export interface CustomView extends TableauBaseWithName {
 	setName: (name: string) => void;
 	getAdvertised: () => boolean;
 	setAdvertised: (advertised: boolean) => void;
@@ -255,44 +340,220 @@ export interface CustomView {
 	getOwnerName: () => string;
 	getUrl: () => string;
 	getWorkbook: () => Workbook;
-	saveAsync: () => TableauPromise<CustomView>;
+	saveAsync: () => Promise<CustomView>;
 }
 
-export interface Sheet {
+export interface Sheet extends TableauBaseWithName {
+	getIndex: () => number;
+	getIsActive: () => boolean;
+	getIsHidden: () => boolean;
+	getSheetType: () => SheetType;
+	getSize: () => SheetSize;
+	getUrl: () => string;
+	getWorkbook: () => Workbook;
+	changeSizeAsync: (size: SheetSize) => Promise<SheetSize>;
 
+	behavior: SheetSizeBehavior;
+	maxSize: Size;
+	minSize: Size;
 }
 
-export interface SheetInfo {
-
+export interface SheetInfo extends TableauBaseWithName {
+	getIndex: () => number;
+	getIsActive: () => boolean;
+	getIsHidden: () => boolean;
+	getSheetType: () => SheetType;
+	getSize: () => SheetSize;
+	getUrl: () => string;
+	getWorkbook: () => Workbook;
 }
 
-export interface Worksheet {
+export interface DataTable extends TableauBaseWithName {
+	getData: () => [];
+	getColumns: () => Column[];
+	getTotalRowCount: () => number;
+	getIsSummaryData: () => boolean;
+}
 
+export interface LogicalTable {
+	getTableId: () => string;
+	getCaption: () => string;
+}
+
+interface WorksheetSelectMarkAsync {
+	(fieldName: string, value: any, updateType: SelectionUpdateType): void;
+	(fieldValuesMap: any, updateType: SelectionUpdateType): void;
+	(marks: Mark[], updateType: SelectionUpdateType): void;
+}
+
+export interface Worksheet extends Sheet {
+	getParentDashboard: () => Dashboard;
+	getParentStoryPoint: () => StoryPoint;
+	getDataSourceAsync: () => Promise<DataSource[]>;
+	getSummaryDataAsync: (options: getSummaryDataOptions) => Promise<DataTable>;
+	getUnderlyingDataAsync: (options: getUnderlyingDataOptions) => Promise<DataTable>;
+	getUnderlyingTableAsync: () => Promise<LogicalTable[]>;
+	getUnderlyingTableDataAsync: (tableID: string, options: getUnderlyingDataOptions) => Promise<DataTable>;
+	AppendContextMenuAsync: (targetMenu: ApiMenuType, config: ContextMenuOptions) => Promise<string>;
+	RemoveContextMenuAsync: (targetMenu: ApiMenuType, menuItemId: string) => Promise<void>;
+	ExecuteContextMenuAsync: (targetMenu: ApiMenuType, menuItemId: string) => Promise<void>;
+	// Filtering
+	getFiltersAsync: () => Promise<Filter[]>;
+	applyFilterAsync: (fieldName: string, values: any, updateType: FilterUpdateType, options?: FilterOptions) => Promise<string>;
+	applyRangeFilterAsync: (fieldName: string, range: RangeFilterOptions) => Promise<string>;
+	applyRelativeDateFilter: (fieldName: string, options: RelativeDateFilterOptions) => Promise<string>;
+	applyHierarchicalFilterAsync: (fieldName: string, value: any, options: HierarchicalFilterOptions) => Promise<string>;
+	// Selecting
+	clearSelectedMarksAsync: () => void;
+	getSelectedMarksAsync: () => Promise<Mark[]>;
+	selectMarksAsync: WorksheetSelectMarkAsync
+}
+
+export interface Dashboard extends Sheet {
+	getObjects: () => DashboardObject[];
+	getWorksheets: () => Worksheet[];
+	getParentStoryPoint: () => StoryPoint;
+	// Filtering
+	getFiltersAsync: () => Promise<Filter[]>;
+	applyFilterAsync: (fieldName: string, values: any, updateType: FilterUpdateType, options?: FilterOptions) => Promise<string>;
+}
+
+export interface DashboardObject {
+	getObjectType: () => DashboardObjectType;
+	getDashboard: () => Dashboard;
+	getWorksheet: () => Worksheet;
+	getPosition: () => Point;
+	getSize: () => Size;
+}
+
+export interface Story extends Sheet {
+	getStoryPointsInfo: () => StoryPointInfo[];
+	getActiveStoryPoint: () => StoryPoint;
+	activateStoryPointAsync: (index: number) => Promise<StoryPoint>;
+	activateNextStoryPointAsync: () => Promise<StoryPoint>;
+	activatePreviousStoryPoint: () => Promise<StoryPoint>;
+	revertStoryPointAsync: (index: number) => Promise<StoryPoint>;
 }
 
 export interface StoryPoint {
-
+	getIndex: () => number;
+	getCaption: () => string;
+	getIsActive: () => boolean;
+	getIsUpdated: () => boolean;
+	getContainedSheet: () => Sheet;
+	getParentStory: () => Story;
 }
 
 export interface StoryPointInfo {
-
+	getIndex: () => number;
+	getCaption: () => string;
+	getIsActive: () => boolean;
+	getIsUpdated: () => boolean;
+	getParentStory: () => Story;
 }
-
-export interface CustomView {
-
-}
-
 
 export interface Filter {
+	getWorksheet: () => Worksheet;
+	getFilterType: () => FilterType;
+	getFieldName: () => string;
+	getAppliedWorksheetAsync: () => Promise<string[]>;
+	getFieldAsync: () => Promise<Field>;
+	setAppliedWorksheetsAsync:(applyToWorksheets: string[])=>Promise<string[]>
+}
+
+export interface CategoricalFilter extends Filter {
+	getIsExcludeMode: () => boolean;
+	getAppliedValues: () => DataValue[];
+	getIsAllSelected: () => boolean;
+}
+
+export interface QuantitativeFilter extends Filter {
+	getDomainMin: () => DataValue;
+	getDomainMax: () => DataValue;
+	getMin: () => DataValue;
+	getMax: () => DataValue;
+	getIncludeNullValues: () => boolean;
+}
+
+export interface RelativeDateFilter extends Filter {
+	getPeriod: () => PeriodType;
+	getRange: () => DateRangeType;
+	getRnageN: () => number;
+}
+
+export interface FilterOptions {
+	isExcludeMode: boolean;
+}
+
+export interface RangeFilterOptions {
+	min: number | Date;
+	max: number | Date;
+	nullOption: NullOption
+}
+
+export interface RelativeDateFilterOptions {
+	anchorDate: Date;
+	periodType: PeriodType;
+	rangeType: DateRangeType;
+	rangeN: number;
+}
+
+export interface HierarchicalFilterOptions {
 
 }
+
+
 
 export interface Mark {
-
+	getPairs: () => Pair[];
 }
 
-export interface Parameter {
+export interface Pair {
+	fieldName: string;
+	value: any;
+	formattedValue: string;
+}
 
+export interface Parameter extends TableauBaseWithName {
+	getCurrentValue: () => DataValue;
+	getDataType: () => ParameterDataType;
+	getAllowableValuesType: () => ParameterAllowableValuesType;
+	getAllowableValues: () => DataValue[];
+	getMinValue: () => DataValue;
+	getMaxValue: () => DataValue;
+	getStepSize: () => number;
+	getDateStepPeriod: () => PeriodType;
+}
+
+export interface SheetSize {
+	behavior: SheetSizeBehavior;
+	maxSize: Size;
+	minSize: Size;
+}
+
+export interface Column {
+	getFieldName: () => string;
+	getDataType: () => string;
+	getIsReferenced: () => boolean;
+	getIndex: () => number;
+}
+
+export type DataValue = {
+	value: any;
+	formattedValue: string;
+}
+
+export type getSummaryDataOptions = {
+	ignoreAliases: boolean
+	ignoreSelection: boolean
+	maxRows: number
+}
+
+export type getUnderlyingDataOptions = {
+	ignoreAliases: boolean
+	ignoreSelection: boolean
+	includeAllColumns: boolean
+	maxRows: number
 }
 
 export type Size = {
@@ -305,6 +566,14 @@ export type Point = {
 	y: number
 }
 
+export type ContextMenuOptions = {
+	displayName: string
+}
+
 export const Viz: new (parentElement: HTMLElement, url: string, options: VizCreateOptions) => Viz = tableauSoftware.Viz;
+
+export const Mark: new (pairs: Pair[]) => Mark = tableauSoftware.Mark;
+
+export const Pair: new (fieldName: string, value: any) => Pair = tableauSoftware.Pair;
 
 export default tableauSoftware;
