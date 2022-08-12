@@ -10,9 +10,17 @@
   },
   "homepage": "https://github.com/noverliu/tableau-api.git",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["tableau", "tableau js", "tableau ts"],
+  "keywords": [
+    "tableau",
+    "tableau js",
+    "tableau ts"
+  ],
   "author": "spraus_lau",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
 }
