@@ -494,7 +494,7 @@ declare namespace tableau {
 	}
 
 	interface VizResizeEvent extends TableauEvent {
-		GetAvailableSize: () => {}
+		getVizSize: () => Size;
 	}
 
 	interface Workbook extends TableauBaseWithName {

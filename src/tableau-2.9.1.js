@@ -10217,7 +10217,5 @@
 	tab._ApiBootstrap.initialize();
 	
 global.tableauSoftware._apiLoaded = true;
-	
-const { tableauSoftware } = global;
 
-module.exports['default']=tableauSoftware;
+export default global.tableauSoftware;
