@@ -1,16 +1,13 @@
 /*! tableau-2.9.1 */
-(function() {
 
-
+	
 	/*! BEGIN MscorlibSlim */
-	
-	
+	var global = {};	
 	
 	////////////////////////////////////////////////////////////////////////////////
 	// Globals and assembly registration
 	////////////////////////////////////////////////////////////////////////////////
 	
-	var global = {};
 	
 	(function(global) {
 		'use strict';
@@ -10219,7 +10216,8 @@
 	
 	tab._ApiBootstrap.initialize();
 	
-	global.tableauSoftware._apiLoaded = true;
+global.tableauSoftware._apiLoaded = true;
+	
+const { tableauSoftware } = global;
 
-	module.exports = global;
-	})();
+module.exports['default']=tableauSoftware;

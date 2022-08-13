@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
+    "module": "ES6",
 		"allowJs": true,
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
+    "esModuleInterop": false,
     "declarationDir": "./dist/types",
 		"isolatedModules": false
   },
-
   "include": [
     "src/**/*",
   ],
