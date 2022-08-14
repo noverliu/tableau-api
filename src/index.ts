@@ -2,7 +2,8 @@ import tableau from "./tableau-2.9.1";
 
 export const Viz= tableau.Viz;
 export const Mark= tableau.Mark;
-export const Pair= tableau.Pair;
+export const Pair = tableau.Pair;
+export const VizManager = tableau.VizManager;
 
 export default tableau;
 

@@ -217,9 +217,9 @@ declare namespace tableau {
 		message: string;
 	}
 
-	interface VizManager {
-		getVizs: () => Viz[];
-	}
+	type VizManager = {
+		getVizs(): Viz[]
+	};
 
 	class Viz {
 		constructor(parentElement: HTMLElement, url: string, options: VizCreateOptions);
@@ -230,7 +230,7 @@ declare namespace tableau {
 		getUrl: () => string;
 		getWorkbook: () => Workbook;
 		getAreAutomaticUpdatesPaused: () => boolean;
-
+		dispose: () => void;
 		addEventListener: (event: TableauEventNameEnum, handler: Function) => void;
 		removeEventListener: (event: TableauEventNameEnum, handler: Function) => void;
 	}
@@ -304,7 +304,7 @@ declare namespace tableau {
 	}
 
 	interface VizResizeEvent extends TableauEvent {
-		getVizSize: () => Size;
+		getVizSize: () => VizSize;
 	}
 
 	interface Workbook extends TableauBaseWithName {
@@ -525,6 +525,11 @@ declare namespace tableau {
 		getMaxValue: () => DataValue;
 		getStepSize: () => number;
 		getDateStepPeriod: () => PeriodType;
+	}
+
+	interface VizSize {
+		chromeHeight: number;
+		sheetSize: SheetSize;
 	}
 
 	interface SheetSize {
