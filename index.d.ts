@@ -236,16 +236,16 @@ declare namespace tableau {
 	}
 
 	interface VizCreateOptions {
-		disableUrlActionsPopups: boolean
-		hideTabs: boolean
-		hideToolbar: boolean
-		instanceIdToClone: string
-		height: string
-		width: string
-		device: string
-		onFirstInteractive: (e: TableauEvent) => void
-		onFirstVizSizeKnown: (e: VizResizeEvent) => void
-		toolbarPosition: ApiToolbarPosition
+		disableUrlActionsPopups?: boolean
+		hideTabs?: boolean
+		hideToolbar?: boolean
+		instanceIdToClone?: string
+		height?: string
+		width?: string
+		device?: string
+		onFirstInteractive?: (e: TableauEvent) => void
+		onFirstVizSizeKnown?: (e: VizResizeEvent) => void
+		toolbarPosition?: ApiToolbarPosition
 	}
 
 	interface ToolbarState {
@@ -317,7 +317,7 @@ declare namespace tableau {
 		getParametersAsync: () => Promise<Parameter[]>;
 		changeParameterValueAsync: (name: string, value: any) => Promise<Parameter>;
 		getCustomViewsAsync: () => Promise<CustomView[]>;
-		showCustomViewAsync: (customViewNmae: string) => Promise<CustomView>;
+		showCustomViewAsync: (customViewName: string) => Promise<CustomView>;
 		removeCustomViewAsync: (customViewName: string) => Promise<CustomView>;
 		rememberCustomViewAsync: (customViewName: string) => Promise<CustomView>;
 		setActiveCustomViewAsDefaultAsync: () => void;
@@ -480,7 +480,7 @@ declare namespace tableau {
 	interface RelativeDateFilter extends Filter {
 		getPeriod: () => PeriodType;
 		getRange: () => DateRangeType;
-		getRnageN: () => number;
+		getRangeN: () => number;
 	}
 
 	interface FilterOptions {
