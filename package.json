@@ -1,7 +1,7 @@
 {
   "name": "tableau-js",
-  "version": "1.0.3",
-  "description": "A commonJS version of Tableau javascript api.",
+  "version": "1.0.4",
+  "description": "Unofficial Tableau javascript api.",
   "main": "dist/index.js",
   "types": "index.d.ts",
   "repository": {

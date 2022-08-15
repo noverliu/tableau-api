@@ -404,7 +404,7 @@ declare namespace tableau {
 		applyFilterAsync: (fieldName: string, values: any, updateType: FilterUpdateType, options?: FilterOptions) => Promise<string>;
 		applyRangeFilterAsync: (fieldName: string, range: RangeFilterOptions) => Promise<string>;
 		applyRelativeDateFilter: (fieldName: string, options: RelativeDateFilterOptions) => Promise<string>;
-		applyHierarchicalFilterAsync: (fieldName: string, value: any, options: HierarchicalFilterOptions) => Promise<string>;
+		applyHierarchicalFilterAsync: (fieldName: string, value: any, updateType: FilterUpdateType, options?: HierarchicalFilterOptions) => Promise<string>;
 		// Selecting
 		clearSelectedMarksAsync: () => void;
 		getSelectedMarksAsync: () => Promise<Mark[]>;
@@ -500,7 +500,7 @@ declare namespace tableau {
 		rangeN: number;
 	}
 
-	interface HierarchicalFilterOptions {
+	interface HierarchicalFilterOptions extends FilterOptions {
 
 	}
 
