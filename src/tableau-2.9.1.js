@@ -4081,6 +4081,7 @@
 					}
 					var command = new $tab__ApiCommand(commandName, commandId, handlerId, serializedParams);
 					var message = command.serialize();
+					console.log(message);
 					if ($tab__Utility.isPostMessageSynchronous()) {
 						window.setTimeout(function() {
 							iframe.contentWindow.postMessage(message, '*');
@@ -4109,6 +4110,7 @@
 					return;
 				}
 				var command = $tab__ApiCommand.parse(messageEvent.data.toString());
+				console.log(command, messageEvent.data);
 				var hostId = command.get_hostId();
 				var handler = this.$handlers[hostId];
 				if (ss.isNullOrUndefined(handler) || !ss.referenceEquals(handler.get_hostId(), command.get_hostId())) {
@@ -6942,6 +6944,7 @@
 					var error = $tab__WorksheetImpl.$filterCommandError(result);
 					if (ss.isNullOrUndefined(error)) {
 						var filterJson = result;
+						console.log('filterjson', filterJson);
 						var filter = $tableauSoftware_Filter.$createFilter(this, filterJson);
 						deferred.resolve(filter);
 					}
@@ -7204,6 +7207,7 @@
 				}), function(remoteError, message) {
 					deferred.reject(tab._TableauException.createServerError(message));
 				});
+				console.log(commandParameters);
 				this.sendCommand(Object).call(this, commandParameters, returnHandler);
 				return deferred.get_promise();
 			},
